@@ -44,7 +44,8 @@ public:
       std::string _tileMatrixSetID,
       const std::optional<std::vector<std::string>> tileMatrixLabels,
       const std::optional<std::map<std::string, std::string>> dimensions,
-      const std::vector<std::string>& subdomains)
+      const std::vector<std::string>& subdomains,
+      const std::optional<std::string>& token)
       : QuadtreeRasterOverlayTileProvider(
             pOwner,
             asyncSystem,
@@ -68,7 +69,8 @@ public:
         _tileMatrixSetID(_tileMatrixSetID),
         _labels(tileMatrixLabels),
         _staticDimensions(dimensions),
-        _subdomains(subdomains) {}
+        _subdomains(subdomains),
+        _token(token) {}
 
   virtual ~WebMapTileServiceTileProvider() {}
 
@@ -152,6 +154,10 @@ protected:
                                  : CesiumUtility::Uri::escape(it->second);
         });
 
+    if (_token) {
+      url += "&tk=" + *_token;
+    }
+
     return this->loadTileImageFromUrl(url, this->_headers, std::move(options));
   }
 
@@ -166,6 +172,7 @@ private:
   std::optional<std::vector<std::string>> _labels;
   std::optional<std::map<std::string, std::string>> _staticDimensions;
   std::vector<std::string> _subdomains;
+  std::optional<std::string> _token;
 };
 
 WebMapTileServiceRasterOverlay::WebMapTileServiceRasterOverlay(
@@ -284,7 +291,8 @@ WebMapTileServiceRasterOverlay::createTileProvider(
               _options.tileMatrixSetID,
               _options.tileMatrixLabels,
               _options.dimensions,
-              _options.subdomains));
+              _options.subdomains,
+              _options.token));
 }
 
 } // namespace CesiumRasterOverlays

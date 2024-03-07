@@ -16,7 +16,7 @@
 namespace CesiumRasterOverlays {
 
 /**
- * @brief Options for {@link WebMapTileServiceRasterOverlay}.
+ * @brief Options for tile map service accesses.
  */
 struct WebMapTileServiceRasterOverlayOptions {
 
@@ -122,11 +122,15 @@ struct WebMapTileServiceRasterOverlayOptions {
    * Default value is 256
    */
   std::optional<uint32_t> tileHeight;
+
+  /**
+   * @brief Some WMTS services require token authentication.
+   */
+  std::optional<std::string> token;
 };
 
 /**
- * @brief A {@link RasterOverlay} accessing images from a Web Map Tile Service
- * (WMTS) server.
+ * @brief A {@link RasterOverlay} based on tile map service imagery.
  */
 class CESIUMRASTEROVERLAYS_API WebMapTileServiceRasterOverlay final
     : public RasterOverlay {
